@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">World Landmarks</string>
+    <string name="world_landmarks_logo">World\nLandmarks</string>
+
+    <string name="onboarding_quotation1">Life is short and the world is wide</string>
+    <string name="onboarding_sentence1">Start your journey here &amp; discover amazing places around the world</string>
+    <string name="onboarding_button1">Get Started</string>
+
+    <string name="onboarding_quotation2">It\'s a big world out there go explore</string>
+    <string name="onboarding_sentence2">From ancient cities to modern wonders, start exploring today</string>
+    <string name="onboarding_button2">Next</string>
+
+    <string name="onboarding_quotation3">Travel opens your mind to new worlds</string>
+    <string name="onboarding_sentence3">Step into a world full of unforgettable places &amp; experiences</string>
+    <string name="onboarding_button3">Next</string>
+
+    <string name="signInNow">Sign in now</string>
+    <string name="signUpNow">Sign up now</string>
+    <string name="nameHint">Name</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Password</string>
+    <string name="passwordConstraint">Password must be at least 8 characters</string>
+    <string name="checkAgreement">I agree to the Terms of Service and Privacy Policy</string>
+    <string name="signIn">Sign in</string>
+    <string name="signUp">Sign up</string>
+    <string name="doNotHaveAccount">Don\'t have an account? Sign up</string>
+    <string name="alreadyHaveAccount">Already have an account? Sign in</string>
+
+    <string name="user_name">Temp User</string>
+    <string name="home_quotation">Explore the \nBeautiful World!</string>
+    <string name="noName">No Name</string>
+    <string name="noLocation">No Location</string>
+    <string name="exploreButton">Explore</string>
+
+    <string name="location_label">📍Location</string>
+    <string name="description_label">Description</string>
+    <string name='description1'>Description1</string>
+    <string name='description2'>Description2</string>
+    <string name='description3'>Description3</string>
+
+    <string name='search_for_landmark'>🔍 Search for a landmark</string>
+    <string name='famousPlaces'>Start Discovering Famous Places Around The World</string>
+    <string name='short_description'>landmark short description</string>
+</resources>

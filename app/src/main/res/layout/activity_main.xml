@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="50dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/user_image"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="13dp"
+                        />
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/userName"
+                        android:text="@string/user_name"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:layout_marginEnd="70dp"
+                        />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:layout_width="25dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/notification_image"
+                        android:scaleType="fitCenter"
+                        android:background="@color/white"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="20dp"
+                        />
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/home_quot"
+                    android:layout_marginTop="25dp"
+                    android:fontFamily="monospace"
+                    android:text="@string/home_quotation"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:lineSpacingExtra="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/recycleView"/>
+
+                </LinearLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="85dp"
+                    android:layout_weight="1"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottomBarMain"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_menu"/>
+
+</RelativeLayout>
