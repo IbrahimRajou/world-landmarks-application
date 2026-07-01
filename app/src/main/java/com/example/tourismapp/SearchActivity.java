@@ -31,6 +31,9 @@ public class SearchActivity extends AppCompatActivity {
     BottomNavigationView bnvBar;
     AutoCompleteTextView autoTVLandmark;
     Spinner spCountry;
+    AppDatabase dbHelper = new AppDatabase(this);
+    SQLiteDatabase db;
+    String selectedCountry = "", searchLandmark = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +42,13 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
-        AppDatabase dbHelper = new AppDatabase(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         recycleLandmarks = (RecyclerView) findViewById(R.id.displayLandmarks);
         bnvBar = (BottomNavigationView) findViewById(R.id.bottomBarSearch);
         autoTVLandmark = (AutoCompleteTextView) findViewById(R.id.searchALandmark);
         spCountry = (Spinner) findViewById(R.id.searchByCountrySpinner);
+
+        db = dbHelper.getWritableDatabase();
 
         // To get all the landmarks in a random order to be displayed in the search screen
         Cursor cursor = db.rawQuery("SELECT Name, Location, ShortDescription, SearchImage FROM Landmark ORDER BY Random()", null);
@@ -61,19 +64,8 @@ public class SearchActivity extends AppCompatActivity {
             // While the user is typing we retrieve the landmarks that contains the entered text from the user
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String searchValue = s.toString().toLowerCase();
-                ArrayList<LandmarkModel> newList = new ArrayList<>();
-                if (cursor.moveToFirst()) {
-                    do {
-                        if (cursor.getString(0).toLowerCase().contains(searchValue)) {
-                            newList.add(new LandmarkModel(cursor.getString(0), cursor.getString(1),
-                                    cursor.getString(2), cursor.getString(3)));
-                        }
-                    } while (cursor.moveToNext());
-                }
-                LandmarkAdapter newAdapter = new LandmarkAdapter(SearchActivity.this, newList);
-                recycleLandmarks.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-                recycleLandmarks.setAdapter(newAdapter);
+                searchLandmark = s.toString().toLowerCase();
+                filterResults(searchLandmark, selectedCountry);
             }
         });
 
@@ -93,21 +85,9 @@ public class SearchActivity extends AppCompatActivity {
         spCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int index, long id) {
-                autoTVLandmark.setText("");
-                if (index != 0){
-                    String country = spList.get(index);
-                    ArrayList<LandmarkModel> newList = new ArrayList<>();
-                    Cursor cursor3 = db.rawQuery("SELECT Name, Location, ShortDescription, SearchImage, CountryId FROM Landmark WHERE CountryID = (SELECT ID FROM Country WHERE Name = ?) " +
-                            "ORDER BY Random() LIMIT 10", new String [] {country});
-                    if (cursor3.moveToFirst()) {
-                        do {
-                            newList.add(new LandmarkModel(cursor3.getString(0), cursor3.getString(1),
-                                    cursor3.getString(2), cursor3.getString(3)));
-                        } while (cursor3.moveToNext());
-                    }
-                    LandmarkAdapter newAdapter = new LandmarkAdapter(SearchActivity.this, newList);
-                    recycleLandmarks.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-                    recycleLandmarks.setAdapter(newAdapter);
+                if (index != 0) {
+                    selectedCountry = spList.get(index);
+                    filterResults(searchLandmark, selectedCountry);
                 }
                 else {
                     showAllLandmarks(cursor);
@@ -152,5 +132,31 @@ public class SearchActivity extends AppCompatActivity {
         LandmarkAdapter adapter = new LandmarkAdapter(this, list);
         recycleLandmarks.setLayoutManager(new LinearLayoutManager(this));
         recycleLandmarks.setAdapter(adapter);
+    }
+
+    public void filterResults(String searchLandmark, String selectedCountry) {
+        ArrayList<LandmarkModel> list = new ArrayList<>();
+        String query;
+        String values[];
+        if (!selectedCountry.isEmpty()) {
+            query = "SELECT Name, Location, ShortDescription, SearchImage FROM Landmark WHERE name LIKE ? AND countryId = (SELECT id FROM Country WHERE name LIKE ?)";
+            values = new String [] {"%" + searchLandmark + "%", selectedCountry};
+        }
+        else {
+            query = "SELECT Name, Location, ShortDescription, SearchImage FROM Landmark WHERE name LIKE ?";
+            values = new String [] {"%" + searchLandmark + "%"};
+        }
+
+        Cursor cc = db.rawQuery(query, values);
+
+        if (cc.moveToFirst()) {
+            do {
+                list.add(new LandmarkModel(cc.getString(0), cc.getString(1), cc.getString(2), cc.getString(3)));
+            } while (cc.moveToNext());
+        }
+
+        LandmarkAdapter newAdapter = new LandmarkAdapter(SearchActivity.this, list);
+        recycleLandmarks.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
+        recycleLandmarks.setAdapter(newAdapter);
     }
 }
