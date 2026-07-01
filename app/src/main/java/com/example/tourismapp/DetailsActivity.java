@@ -53,6 +53,7 @@ public class DetailsActivity extends AppCompatActivity {
         String likedLandmark = i.getStringExtra("Landmark");
         Cursor cursor = db.rawQuery("SELECT * FROM Landmark WHERE Name=?", new String[] {likedLandmark});
         cursor.moveToFirst();
+        String likedLandmarkId = cursor.getString(0);
 
         imgbBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,20 +71,35 @@ public class DetailsActivity extends AppCompatActivity {
 
         tvItemName.setText(cursor.getString(2));
 
+        Cursor c = db.rawQuery("SELECT * FROM User_Like_Landmark WHERE User_id = ? AND Landmark_id = ?;", new String[] {Session.currentUser.getId() + "", likedLandmarkId});
+        if (c.moveToFirst()) {
+            imgbStar.setImageResource(R.drawable.true_star_image);
+            status[0] = true;
+        }
+        else {
+            imgbStar.setImageResource(R.drawable.star_image);
+        }
+
         int currentStars [] = {Integer.parseInt(cursor.getString(11))};
         ContentValues values = new ContentValues();
+        ContentValues newValues = new ContentValues();
+
         imgbStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!status[0]) {
-                    imgbStar.setImageResource(R.drawable.true_star_image);
-                    currentStars[0] = currentStars[0] + 1;
-                    status[0] = true;
-                }
-                else {
+                if (status[0]) {
                     imgbStar.setImageResource(R.drawable.star_image);
                     currentStars[0] = currentStars[0] - 1;
                     status[0] = false;
+                    db.delete("User_Like_Landmark", "User_id = ? AND Landmark_id = ?", new String[] {Session.currentUser.getId() + "", likedLandmarkId});
+                }
+                else {
+                    imgbStar.setImageResource(R.drawable.true_star_image);
+                    currentStars[0] = currentStars[0] + 1;
+                    status[0] = true;
+                    newValues.put("User_id", Session.currentUser.getId());
+                    newValues.put("Landmark_id", likedLandmarkId);
+                    db.insert("User_Like_Landmark",null, newValues);
                 }
                 values.put("NoStars", currentStars[0]);
                 long result = db.update("Landmark", values , "Name=?", new String[] {likedLandmark});
