@@ -80,7 +80,7 @@ public class SearchActivity extends AppCompatActivity {
         // To add all the countries in the DB to the spinner
         ArrayList<String> spList = new ArrayList<>();
         spList.add("Select a country");
-        Cursor cursor2 = db.rawQuery("SELECT ID, Name FROM Country", null);
+        Cursor cursor2 = db.rawQuery("SELECT ID, Name FROM Country ORDER BY name ASC", null);
         if (cursor2.moveToFirst()) {
             do {
                 spList.add(cursor2.getString(1));
